@@ -1,0 +1,16 @@
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.exe
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.deps.json
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.runtimeconfig.json
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.runtimeconfig.dev.json
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.dll
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\ref\cspNetwork.dll
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\cspNetwork.pdb
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.csprojAssemblyReference.cache
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.GeneratedMSBuildEditorConfig.editorconfig
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.AssemblyInfoInputs.cache
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.AssemblyInfo.cs
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.csproj.CoreCompileInputs.cache
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.dll
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\ref\cspNetwork.dll
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.pdb
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.genruntimeconfig.cache
