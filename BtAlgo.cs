@@ -1,0 +1,33 @@
+public class BtAlgo
+{
+  private Board _problem;
+  public BtAlgo(Board problem)
+  {
+    _problem = problem;
+  }
+  public bool search()
+  {
+    // best case scenario
+    if (_problem.IsAssigned()) return true;
+    else
+    {
+      // iterate through the states
+      foreach (var state in _problem.UnassignedStates())
+      {
+        // iterate through its domain and assign it with a value
+        foreach (var candidate in state.Domain)
+        {
+          state.Value = candidate;
+          // check the validity if it's valid then continue
+          if(_problem.IsValid())
+          {
+            if(search()) return true;
+          }
+          // backtrack one step and assign another value
+          else state.Value = -1;
+        }
+      }
+    }
+    return false;
+  }
+}

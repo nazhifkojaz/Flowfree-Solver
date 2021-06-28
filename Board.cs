@@ -1,14 +1,18 @@
 using System.Collections.Generic;
+using System;
 public class Board
 {
   private List<State> _states = new List<State>();
+  private int _width, _height;
   
   
   public Board(int width, int height, List<int> domain)
   {
     // initialize the board
+    _width = width;
+    _height = height;
       for (var i = 0; i < width * height; i++)
-        _states.Add(new State(i));
+        _states.Add(new State(i, domain));
     // connect the states
     int row =0, col = 0;
     for (var i = 0; i < width * height; i++)
@@ -22,15 +26,53 @@ public class Board
       if(row+1 < height) _states[i].Peers.Add(_states[i+height]); //down
 
     }
+  }
 
-    // pre-assign the board
-    _states[0].Value = 1;
-    _states[7].Value = 1;
-    _states[4].Value = 2;
-    _states[6].Value = 2;
+  public void Preassign(Dictionary<int, int> preassignedStates)
+  {
+    foreach (var stateValue in preassignedStates)
+    {
+      _states[stateValue.Key].Value = stateValue.Value;
+      _states[stateValue.Key].Preassigned = true;
+    }
+  }
+
+  public bool IsAssigned()
+  {
+    foreach (var state in _states) if(state.Value == -1) return false;
     
-    // solve the board
+    return true;
+  }
 
+  public List<State> UnassignedStates()
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+    {
+      if(state.Value == -1) temp.Add(state);
+    }
+    return temp;
+  }
+
+  public bool IsValid()
+  {
+    foreach (var state in _states)
+    {
+      if(!state.IsConstraintsValid()) return false;
+    }
+    return true;
+  }
+
+  public void PrintBoard()
+  {
+    for (var i = 0; i < _height; i++)
+    {
+      for (var j = 0; j < _width; j++)
+      {
+        Console.Write(_states[i*_height + j].Value + "\t");
+      }
+      Console.WriteLine("");
+    }
   }
   
 }
