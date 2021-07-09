@@ -13,7 +13,7 @@ public class State
   {
     get { return _domain; }
     set { _domain = value; }
-  }
+  }  
 
   private List<State> _peers = new List<State>();
   public List<State> Peers
@@ -55,16 +55,15 @@ public class State
       }
 
       if (Preassigned && assignedWithSameValue > 1) return false;
-      else if (assignedWithSameValue > 2) return false;
-      else if (unassigned == 0 && assignedWithSameValue == 0) return false;
-      else if (unassigned == 0 && assignedWithSameValue == 1 && !Preassigned) return false;
+      else if(Preassigned && assignedWithSameValue < 1 && unassigned == 0) return false;
+      else if(!Preassigned && assignedWithSameValue > 2 && unassigned == 0) return false;
+      else if(!Preassigned && assignedWithSameValue < 2 && unassigned == 0) return false;
+      // else if (assignedWithSameValue > 2) return false;
+      // else if (unassigned == 0 && assignedWithSameValue == 0) return false;
+      // else if (unassigned == 0 && assignedWithSameValue == 1 && !Preassigned) return false;
       // if unassigned is 1, assigned(same) is 1
     }
 
     return true;
   }
-
-
-
-
 }

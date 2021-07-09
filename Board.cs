@@ -35,6 +35,7 @@ public class Board
       _states[stateValue.Key].Value = stateValue.Value;
       _states[stateValue.Key].Preassigned = true;
     }
+    // PrintBoard();
   }
 
   public bool IsAssigned()

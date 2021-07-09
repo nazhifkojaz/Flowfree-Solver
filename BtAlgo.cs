@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System;
 public class BtAlgo
 {
   private Board _problem;
@@ -22,12 +24,14 @@ public class BtAlgo
           if(_problem.IsValid())
           {
             if(search()) return true;
+            // search();
           }
           // backtrack one step and assign another value
-          else state.Value = -1;
+          state.Value = -1;
         }
       }
     }
     return false;
   }
+
 }
