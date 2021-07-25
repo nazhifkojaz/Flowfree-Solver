@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System;
 public class State
 {
   private int _value;
@@ -41,6 +43,57 @@ public class State
   {
     get { return _preassigned; }
     set { _preassigned = value; }
+  }
+
+  public Record MaintainDomains()
+  {
+    List<State> affectedPeers = new List<State>();
+    if(Preassigned)
+    {
+      // we need at max one peer with the same value
+      foreach (var peer in _peers)
+      {
+        if(peer.Value == _value)
+        {
+          // iterate through all other peers and remove the value from their domains if they are not assigned
+          // if other peer is assigned with a value, that is equal to the current value, throw exception
+          foreach (State otherPeer in _peers.Select(i => i).Where(i => i.Id != peer.Id).ToList())
+          {
+            if(otherPeer.Value == _value) throw new System.Exception("we are not supposed to find this, too many same value peers");
+            else
+            {
+              otherPeer.Domain.Remove(_value);
+              affectedPeers.Add(otherPeer);
+            }
+          }
+        return new Record(_value, affectedPeers);
+        }
+      }
+    }
+    else
+    {
+      // we need at max 2 peers with the same value
+      int idOne = -1, idTwo = -1;
+      foreach (var peer in _peers)
+      {
+        if(peer.Value == _value && (idOne != -1 && idTwo != -1))
+        {
+          foreach (State otherPeer in _peers.Select(i => i).Where(i => (i.Id != idOne && i.Id != idTwo)).ToList())
+          {
+            if(otherPeer.Value == _value) throw new System.Exception("we are not supposed to find this, too many same value peers");
+            else
+            {
+              otherPeer.Domain.Remove(_value);
+              affectedPeers.Add(otherPeer);
+            }
+          }
+          return new Record(_value, affectedPeers);
+        }
+        else if(peer.Value == _value && idOne != -1) idTwo = peer.Id;
+        else if(peer.Value == _value) idOne = peer.Id;
+      }
+    }
+    return null;
   }
 
   public bool IsConstraintsValid()

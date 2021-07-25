@@ -20,6 +20,7 @@ public class BtAlgo
         foreach (var candidate in state.Domain)
         {
           state.Value = candidate;
+          FC.Maintain(_problem);
           // check the validity if it's valid then continue
           if(_problem.IsValid())
           {
@@ -27,11 +28,11 @@ public class BtAlgo
             // search();
           }
           // backtrack one step and assign another value
+          FC.Restore();
           state.Value = -1;
         }
       }
     }
     return false;
   }
-
 }

@@ -55,6 +55,16 @@ public class Board
     return temp;
   }
 
+  public List<State> AssignedStates()
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+    {
+      if(state.Value != -1) temp.Add(state);
+    }
+    return temp;
+  }
+
   public bool IsValid()
   {
     foreach (var state in _states)
