@@ -19,9 +19,11 @@ public static class FC
 
     foreach (var backtracking in lastMove)
     {
+      if(backtracking != null){
       foreach (var affectedPeer in backtracking.AffectedPeers)
-      {
-        affectedPeer.Domain.Add(backtracking.Value);
+        {
+          affectedPeer.Domain.Add(backtracking.Value);
+        }
       }
     }
     History.RemoveAt(History.Count-1);
