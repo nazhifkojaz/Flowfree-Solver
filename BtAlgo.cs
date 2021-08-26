@@ -17,17 +17,28 @@ public class BtAlgo
       foreach (var state in _problem.UnassignedStates())
       {
         // iterate through its domain and assign it with a value
-        foreach (var candidate in state.Domain)
+        // foreach (var candidate in state.Domain)
+        // {
+        //   state.Value = candidate;
+        //   FC.Maintain(_problem);
+        //   // check the validity if it's valid then continue
+        //   if(_problem.IsValid())
+        //   {
+        //     if(search()) return true;
+        //     // search();
+        //   }
+        //   // backtrack one step and assign another value
+        //   FC.Restore();
+        //   state.Value = -1;
+        // }
+        for (var i = 0; i < state.Domain.Count; i++)
         {
-          state.Value = candidate;
+          state.Value = state.Domain[i];
           FC.Maintain(_problem);
-          // check the validity if it's valid then continue
           if(_problem.IsValid())
           {
             if(search()) return true;
-            // search();
           }
-          // backtrack one step and assign another value
           FC.Restore();
           state.Value = -1;
         }

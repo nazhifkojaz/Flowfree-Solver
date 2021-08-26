@@ -15,17 +15,18 @@ public static class FC
 
   public static void Restore()
   {
-    var lastMove = History[History.Count-1];
+    var lastMove = History[History.Count - 1];
 
     foreach (var backtracking in lastMove)
     {
-      if(backtracking != null){
-      foreach (var affectedPeer in backtracking.AffectedPeers)
+      if (backtracking != null)
+      {
+        foreach (var affectedPeer in backtracking.AffectedPeers)
         {
           affectedPeer.Domain.Add(backtracking.Value);
         }
       }
     }
-    History.RemoveAt(History.Count-1);
+    History.RemoveAt(History.Count - 1);
   }
 }
