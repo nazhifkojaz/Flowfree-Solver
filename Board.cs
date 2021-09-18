@@ -2,28 +2,57 @@ using System.Collections.Generic;
 using System;
 public class Board
 {
-  private List<State> _states = new List<State>();
+  private List<State> _states;
+  public List<State> States
+  {
+      get { return _states; }
+      set { _states = value; }
+  }
+  
   private int _width, _height;
-  
-  
-  public Board(int width, int height, List<int> domain)
+  private int _nodesCount;
+  public int NodesCount
+  {
+    get { return _nodesCount; }
+    set { _nodesCount = value; }
+  }
+
+
+
+  public Board(int width, int height, int n_domain)
   {
     // initialize the board
+    _nodesCount = 0;
     _width = width;
     _height = height;
-      for (var i = 0; i < width * height; i++)
-        _states.Add(new State(i, domain));
-    // connect the states
-    int row =0, col = 0;
-    for (var i = 0; i < width * height; i++)
-    {
-      col = i % width;
-      row = i / height;
+    CreateStates(n_domain);
+    ConnectStates();
 
-      if(col-1 >= 0) _states[i].Peers.Add(_states[i-1]); //left
-      if(col+1 < width) _states[i].Peers.Add(_states[i+1]); //right
-      if(row-1 >= 0) _states[i].Peers.Add(_states[i-height]); //up
-      if(row+1 < height) _states[i].Peers.Add(_states[i+height]); //down
+  }
+
+  public void CreateStates(int n_domain)
+  {
+    _states = new List<State>();
+    List<int> domain = new List<int>();
+    for (var i = 1; i <= n_domain; i++)
+      domain.Add(i);
+    for (var i = 0; i < _width * _height; i++)
+      _states.Add(new State(i, domain));
+  }
+
+  public void ConnectStates()
+  {
+    // connect the states
+    int row = 0, col = 0;
+    for (var i = 0; i < _width * _height; i++)
+    {
+      col = i % _width;
+      row = i / _height;
+
+      if (col - 1 >= 0) _states[i].Peers.Add(_states[i - 1]); //left
+      if (col + 1 < _width) _states[i].Peers.Add(_states[i + 1]); //right
+      if (row - 1 >= 0) _states[i].Peers.Add(_states[i - _height]); //up
+      if (row + 1 < _height) _states[i].Peers.Add(_states[i + _height]); //down
 
     }
   }
@@ -40,8 +69,8 @@ public class Board
 
   public bool IsAssigned()
   {
-    foreach (var state in _states) if(state.Value == -1) return false;
-    
+    foreach (var state in _states) if (state.Value == -1) return false;
+
     return true;
   }
 
@@ -50,7 +79,7 @@ public class Board
     List<State> temp = new List<State>();
     foreach (var state in _states)
     {
-      if(state.Value == -1) temp.Add(state);
+      if (state.Value == -1) temp.Add(state);
     }
     return temp;
   }
@@ -60,7 +89,7 @@ public class Board
     List<State> temp = new List<State>();
     foreach (var state in _states)
     {
-      if(state.Value != -1) temp.Add(state);
+      if (state.Value != -1) temp.Add(state);
     }
     return temp;
   }
@@ -69,7 +98,7 @@ public class Board
   {
     foreach (var state in _states)
     {
-      if(!state.IsConstraintsValid()) return false;
+      if (!state.IsConstraintsValid()) return false;
     }
     return true;
   }
@@ -80,10 +109,10 @@ public class Board
     {
       for (var j = 0; j < _width; j++)
       {
-        Console.Write(_states[i*_height + j].Value + "\t");
+        Console.Write(_states[i * _height + j].Value + "\t");
       }
       Console.WriteLine("");
     }
   }
-  
+
 }
