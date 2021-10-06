@@ -36,6 +36,7 @@ public class State
     _id = id;
     _domain = domain;
     Value = -1;
+    _active = false;
   }
 
   private bool _preassigned;
@@ -43,6 +44,23 @@ public class State
   {
     get { return _preassigned; }
     set { _preassigned = value; }
+  }
+
+  private bool _active;
+  public bool Active
+  {
+      get { return _active; }
+      set { _active = value; }
+  }
+  
+
+  public List<State> GetUnassignedPeers()
+  {
+    List<State> unassigned = new List<State>();
+    foreach (var peer in _peers)
+      if(peer.Value == -1) unassigned.Add(peer);
+
+    return unassigned;
   }
 
   public Record MaintainDomains()

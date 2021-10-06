@@ -63,6 +63,7 @@ public class Board
     {
       _states[stateValue.Key].Value = stateValue.Value;
       _states[stateValue.Key].Preassigned = true;
+      _states[stateValue.Key].Active = true;
     }
     // PrintBoard();
   }
@@ -80,6 +81,16 @@ public class Board
     foreach (var state in _states)
     {
       if (state.Value == -1) temp.Add(state);
+    }
+    return temp;
+  }
+
+  public List<State> GetActiveStates()
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+    {
+      if(state.Active) temp.Add(state);
     }
     return temp;
   }
