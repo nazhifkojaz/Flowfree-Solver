@@ -16,7 +16,7 @@ namespace cspNetwork
             // newBoard.Preassign(new Dictionary<int, int>(){{5, 1}, {8, 1}, {4, 2}, {18, 2}, {6, 3}, {16, 3}, {11, 4}, {21, 4}, {19, 5}, {22, 5}});
             // newBoard.Preassign(new Dictionary<int, int>(){{1, 1}, {9, 1}, {6,2}, {15,2}});
             // newBoard.Preassign(new Dictionary<int, int>(){{0, 1}, {11, 1}, {12,2}, {23,2}, {4,3}, {24,3}});
-            newBoard.Preassign(new Dictionary<int, int>(){{0, 1}, {6, 1}, {4,2}, {5,2}, {8,3}, {15,3}, {14,4}, {16,4}});
+            newBoard.Preassign(new Dictionary<int, int>(){{0, 1}, {6, 1}, {4,2}, {5,2}, {8,3}, {15,3}, {13,4}, {16,4}});
             // solve
             BtAlgo solver = new BtAlgo(newBoard);
             // solver.search();
