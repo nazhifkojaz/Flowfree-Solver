@@ -67,7 +67,8 @@ public class BtAlgo
     else
     {
       //iterate through active states
-      foreach (var current in _problem.GetActiveStates())
+      foreach (var current in _problem.GetActiveStatesOrdered())
+      // foreach (var current in _problem.GetActiveStates()) //this is without MRV
       {
         current.Active = false;
         //iterate through current state's unassigned peers
