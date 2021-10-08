@@ -30,3 +30,5 @@ C:\Users\nzhfkjz\Documents\cspNetwork\obj\Debug\net5.0\cspNetwork.dll
 C:\Users\nzhfkjz\Documents\cspNetwork\obj\Debug\net5.0\ref\cspNetwork.dll
 C:\Users\nzhfkjz\Documents\cspNetwork\obj\Debug\net5.0\cspNetwork.pdb
 C:\Users\nzhfkjz\Documents\cspNetwork\obj\Debug\net5.0\cspNetwork.genruntimeconfig.cache
+D:\Libroh\otherProjects\cspNetwork\bin\Debug\net5.0\CsvHelper.dll
+D:\Libroh\otherProjects\cspNetwork\obj\Debug\net5.0\cspNetwork.csproj.CopyComplete

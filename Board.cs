@@ -126,4 +126,15 @@ public class Board
     }
   }
 
+  public string GetBoardString()
+  {
+    string str = "";
+    foreach (var state in _states)
+    {
+      if(state.Value == -1) str += "x";
+      else str += state.Value.ToString();
+    }
+    return str;
+  }
+
 }

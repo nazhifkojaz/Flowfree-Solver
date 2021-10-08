@@ -1,0 +1,14 @@
+Index,BoardSize,ColorCount,InitialBoard,CompleteBoard,ExecutionTime,IsSolvable
+1,5,3,xxx,zzz,1312,True
+1,5,2,xxx,yyy,123,True
+2,5,2,xqq,yyy,123,True
+3,5,2,xqx,yyy,123,True
+1,5,2,xxx,yyy,123,True
+2,5,2,xqq,yyy,123,True
+3,5,2,xqx,yyy,123,True
+1,5,2,xxx,yyy,123,True
+2,5,2,xqq,yyy,123,True
+3,5,2,xqx,yyy,123,True
+1,5,2,xxx,yyy,123,True
+2,5,2,xqq,yyy,123,True
+3,5,2,xqx,yyy,123,True
