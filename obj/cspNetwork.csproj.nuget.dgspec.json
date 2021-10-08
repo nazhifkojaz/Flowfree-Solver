@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Libroh\\otherProjects\\cspNetwork\\cspNetwork.csproj": {}
+    "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj": {}
   },
   "projects": {
-    "D:\\Libroh\\otherProjects\\cspNetwork\\cspNetwork.csproj": {
+    "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Libroh\\otherProjects\\cspNetwork\\cspNetwork.csproj",
+        "projectUniqueName": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj",
         "projectName": "cspNetwork",
-        "projectPath": "D:\\Libroh\\otherProjects\\cspNetwork\\cspNetwork.csproj",
-        "packagesPath": "C:\\Users\\Kojaz\\.nuget\\packages\\",
-        "outputPath": "D:\\Libroh\\otherProjects\\cspNetwork\\obj\\",
+        "projectPath": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj",
+        "packagesPath": "C:\\Users\\nzhfkjz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Kojaz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\nzhfkjz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"

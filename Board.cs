@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Linq;
 public class Board
 {
   private List<State> _states;
@@ -94,6 +95,15 @@ public class Board
     }
     return temp;
   }
+  
+  // this orders the list based on the number of peers (ascending) -- so, MRV?
+  public List<State> GetActiveStatesOrdered()
+  {
+    List<State> temp = GetActiveStates().OrderBy(o=>o.GetUnassignedPeers().Count).ToList();
+    // List<State> temp = GetActiveStates().OrderByDescending(o=>o.GetUnassignedPeers().Count).ToList();
+    return temp;
+  }
+  // objListOrder.OrderBy(o=>o.OrderDate).ToList()
 
   public List<State> AssignedStates()
   {
