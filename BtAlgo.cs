@@ -3,6 +3,11 @@ using System;
 public class BtAlgo
 {
   private Board _problem;
+  public Board Problem
+  {
+    get {return _problem;}
+    set {_problem = value;}
+  }
   private List<State> _openList;
   public List<State> OpenList
   {
@@ -89,6 +94,7 @@ public class BtAlgo
         }
       }
     }
+    // Console.WriteLine("failed");
     return false;
   }
 }

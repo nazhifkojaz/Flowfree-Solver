@@ -6,11 +6,11 @@ public class Board
   private List<State> _states;
   public List<State> States
   {
-      get { return _states; }
-      set { _states = value; }
+    get { return _states; }
+    set { _states = value; }
   }
-  
-  private int _width, _height;
+
+  private int _width, _height, _colors;
   private int _nodesCount;
   public int NodesCount
   {
@@ -24,6 +24,7 @@ public class Board
   {
     // initialize the board
     _nodesCount = 0;
+    _colors = n_domain;
     _width = width;
     _height = height;
     CreateStates(n_domain);
@@ -50,11 +51,26 @@ public class Board
       col = i % _width;
       row = i / _height;
 
-      if (col - 1 >= 0) _states[i].Peers.Add(_states[i - 1]); //left
-      if (col + 1 < _width) _states[i].Peers.Add(_states[i + 1]); //right
-      if (row - 1 >= 0) _states[i].Peers.Add(_states[i - _height]); //up
-      if (row + 1 < _height) _states[i].Peers.Add(_states[i + _height]); //down
-
+      if (col - 1 >= 0)
+      {
+        _states[i].Peers.Add(_states[i - 1]); //left
+        _states[i].Left = i-1;
+      } else {_states[i].Left = -1;}
+      if (col + 1 < _width)
+      {
+        _states[i].Peers.Add(_states[i + 1]); //right
+        _states[i].Right = i+1;
+      } else {_states[i].Right = -1;}
+      if (row - 1 >= 0)
+      {
+        _states[i].Peers.Add(_states[i - _height]); //up
+        _states[i].Top = i-_height;
+      } else {_states[i].Top = -1;}
+      if (row + 1 < _height)
+      {
+        _states[i].Peers.Add(_states[i + _height]); //down
+        _states[i].Bot = i+_height;
+      } else {_states[i].Bot = -1;}
     }
   }
 
@@ -91,15 +107,15 @@ public class Board
     List<State> temp = new List<State>();
     foreach (var state in _states)
     {
-      if(state.Active) temp.Add(state);
+      if (state.Active) temp.Add(state);
     }
     return temp;
   }
-  
+
   // this orders the list based on the number of peers (ascending) -- so, MRV?
   public List<State> GetActiveStatesOrdered()
   {
-    List<State> temp = GetActiveStates().OrderBy(o=>o.GetUnassignedPeers().Count).ToList();
+    List<State> temp = GetActiveStates().OrderBy(o => o.GetUnassignedPeers().Count).ToList();
     // List<State> temp = GetActiveStates().OrderByDescending(o=>o.GetUnassignedPeers().Count).ToList();
     return temp;
   }
@@ -141,10 +157,33 @@ public class Board
     string str = "";
     foreach (var state in _states)
     {
-      if(state.Value == -1) str += "x";
+      if (state.Value == -1) str += "x";
       else str += state.Value.ToString();
     }
     return str;
+  }
+
+  public int GetNumberOfLines()
+  {
+    int lines = 0;
+    foreach (var state in _states)
+    {
+      bool isEdge = false;
+      if(state.Top != -1 && _states[state.Top].Value == state.Value)
+      {
+        if(state.Left != -1 && _states[state.Left].Value == state.Value) isEdge = true;
+        if(state.Right != -1 && _states[state.Right].Value == state.Value) isEdge = true;
+      } else if(state.Bot != -1 && _states[state.Bot].Value == state.Value)
+      {
+        if(state.Left != -1 && _states[state.Left].Value == state.Value) isEdge = true;
+        if(state.Right != -1 && _states[state.Right].Value == state.Value) isEdge = true;
+      }
+      // if(((_states[state.Top].Value == state.Value) || (_states[state.Bot].Value == state.Value)) && ((_states[state.Left].Value == state.Value) || (_states[state.Right].Value == state.Value))) isEdge = true;
+     // if(state.Bot != -1 && (state.Left == -1 || state.Right == -1))
+        // if(_states[state.Bot].Value == state.Value && (_states[state.Left].Value == state.Value || _states[state.Right].Value == state.Value)) isEdge = true;
+      if (isEdge) lines++;
+    }
+    return lines + _colors;
   }
 
 }
