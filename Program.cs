@@ -54,9 +54,9 @@ namespace cspNetwork
         // for (int i = 0; i < n; i++)
         // {
         // int boardSize = rd.Next(5, 9);
-        int boardSize = 6;
+        int boardSize = 5;
         // int colorCount = rd.Next(boardSize - 2, boardSize + 1);
-        int colorCount = 4;
+        int colorCount = 3;
 
         // create the new board and its data record holder
         var record = new Data { Index = index + 1, BoardSize = boardSize, ColorCount = colorCount };
@@ -120,12 +120,6 @@ namespace cspNetwork
 
         record.IsSolvable = solver.search();
         record.NumberOfLines = -1;
-        if (record.IsSolvable)
-        {
-          counter++;
-          Console.WriteLine($"solvable puzzle number #{counter} is found in index {index}");
-          record.NumberOfLines = board.GetNumberOfLines();
-        }
 
         watch.Stop();
 
@@ -137,9 +131,16 @@ namespace cspNetwork
         record.CompleteBoard = board.GetBoardString();
         records.Add(record);
         index++;
+        if (record.IsSolvable)
+        {
+          counter++;
+          Console.WriteLine($"solvable puzzle number #{counter} is found in index {index}");
+          record.NumberOfLines = board.GetNumberOfLines();
+          WriteDataSingle(record);
+        }
       }
       Console.WriteLine($"{counter} solvable puzzle, {duplicated} duplicate combination, {index} tries");
-      WriteData(records);
+      // WriteData(records);
     }
 
     public static bool CheckPos(int pos, int boardSize, List<int> board)
@@ -193,6 +194,18 @@ namespace cspNetwork
           csv.WriteRecord(record);
           csv.NextRecord();
         }
+      }
+    }
+    public static void WriteDataSingle(Data record)
+    {
+      var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, Delimiter = "," };
+      using (var stream = File.Open("record.csv", FileMode.Append))
+      using (var writer = new StreamWriter(stream))
+      using (var csv = new CsvWriter(writer, config))
+      {
+        // csv.WriteRecords(records);
+        csv.NextRecord();
+        csv.WriteRecord(record);
       }
     }
 

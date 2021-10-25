@@ -11,6 +11,10 @@ public class Board
   }
 
   private int _width, _height, _colors;
+  public int Width
+  {
+    get { return _width;}
+  }
   private int _nodesCount;
   public int NodesCount
   {
@@ -184,6 +188,14 @@ public class Board
       if (isEdge) lines++;
     }
     return lines + _colors;
+  }
+  
+  public int GetColorPair(int id, int color)
+  {
+    int goal = id;
+    foreach (var state in GetActiveStates())
+        if(state.Id != goal && state.Value == color) goal = state.Id;
+    return goal;
   }
 
 }

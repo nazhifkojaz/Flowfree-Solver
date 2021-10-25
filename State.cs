@@ -66,6 +66,18 @@ public class State
 
     return unassigned;
   }
+  
+  public List<State> GetUnassignedPeersOrdered(int id, int size)
+  {
+    List<State> unassigned = GetUnassignedPeers().OrderBy(o => o.GetDistance(id, size)).ToList();
+    return unassigned;
+  }
+  // public List<State> GetActiveStatesOrdered()
+  // {
+  //   List<State> temp = GetActiveStates().OrderBy(o => o.GetUnassignedPeers().Count).ToList();
+  //   // List<State> temp = GetActiveStates().OrderByDescending(o=>o.GetUnassignedPeers().Count).ToList();
+  //   return temp;
+  // }
 
   public Record MaintainDomains()
   {
@@ -140,5 +152,15 @@ public class State
     }
 
     return true;
+  }
+  public int GetDistance(int target, int boardSize)
+  {
+    int x1, x2, y1, y2;
+    x1 = _id % boardSize;
+    y1 = _id / boardSize;
+    x2 = _id % boardSize;
+    y2 = _id / boardSize;
+    
+    return (Math.Abs(x1 - x2) + Math.Abs(y1 - y2));
   }
 }
