@@ -3,6 +3,11 @@ using System;
 public class BtAlgo
 {
   private Board _problem;
+  public Board Problem
+  {
+    get {return _problem;}
+    set {_problem = value;}
+  }
   private List<State> _openList;
   public List<State> OpenList
   {
@@ -73,7 +78,8 @@ public class BtAlgo
         current.Active = false;
         //iterate through current state's unassigned peers
         //this part can also be categorized as 'forward checking', right?
-        foreach (var peer in current.GetUnassignedPeers())
+        foreach (var peer in current.GetUnassignedPeersOrdered(_problem.GetColorPair(current.Id, current.Value), _problem.Width))
+        // foreach (var peer in current.GetUnassignedPeers())
         {
           peer.Active = true;
           peer.Value = current.Value;
@@ -89,6 +95,7 @@ public class BtAlgo
         }
       }
     }
+    // Console.WriteLine("failed");
     return false;
   }
 }

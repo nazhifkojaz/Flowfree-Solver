@@ -1,14 +1,3 @@
-Index,BoardSize,ColorCount,InitialBoard,CompleteBoard,ExecutionTime,IsSolvable
-1,5,3,xxx,zzz,1312,True
-1,5,2,xxx,yyy,123,True
-2,5,2,xqq,yyy,123,True
-3,5,2,xqx,yyy,123,True
-1,5,2,xxx,yyy,123,True
-2,5,2,xqq,yyy,123,True
-3,5,2,xqx,yyy,123,True
-1,5,2,xxx,yyy,123,True
-2,5,2,xqq,yyy,123,True
-3,5,2,xqx,yyy,123,True
-1,5,2,xxx,yyy,123,True
-2,5,2,xqq,yyy,123,True
-3,5,2,xqx,yyy,123,True
+Index,BoardSize,ColorCount,InitialBoard,CompleteBoard,NumberOfLines,ExecutionTime,NodesExplored,IsSolvable
+5042,5,3,x32xxxxx1xxx2xxxxxxxxxx31,3322231112312223111133331,10,0,23,True
+7683,5,3,xxxxxx3xx2xx2xxxxx1x13xxx,2222223332222331111313333,11,0,21,True
