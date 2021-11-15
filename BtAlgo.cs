@@ -98,4 +98,22 @@ public class BtAlgo
     // Console.WriteLine("failed");
     return false;
   }
+  
+  public bool RestructureBoard()
+  {
+    if(_problem.IsValid()) return true;
+    else
+    {
+      foreach (var current in _problem.GetPreassignedStates())
+      {
+          current.Active = true;
+          foreach (var peer in current.GetInactivePeers())
+          {
+              peer.Active = true;
+              
+          }
+      }
+    }
+    return false;
+  }
 }

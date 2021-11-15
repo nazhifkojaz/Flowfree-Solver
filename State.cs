@@ -38,6 +38,13 @@ public class State
     Value = -1;
     _active = false;
   }
+  public State(int id)
+  {
+    _id = id;
+    _value = -1;
+    _active = false;
+    _preassigned = false;
+  }
 
   private bool _preassigned;
   public bool Preassigned
@@ -65,6 +72,14 @@ public class State
       if(peer.Value == -1) unassigned.Add(peer);
 
     return unassigned;
+  }
+  
+  public List<State> GetInactivePeers()
+  {
+    List<State> inactives = new List<State>();
+    foreach (var peer in _peers)
+      if(!peer.Active) inactives.Add(peer);
+    return inactives;
   }
   
   public List<State> GetUnassignedPeersOrdered(int id, int size)
@@ -139,6 +154,29 @@ public class State
       {
         if (peer.Value == Value) assignedWithSameValue++;
         else if (peer.Value == -1) unassigned++;
+      }
+
+      if (Preassigned && assignedWithSameValue > 1) return false;
+      else if(Preassigned && assignedWithSameValue < 1 && unassigned == 0) return false;
+      else if(!Preassigned && assignedWithSameValue > 2 && unassigned == 0) return false;
+      else if(!Preassigned && assignedWithSameValue < 2 && unassigned == 0) return false;
+      // else if (assignedWithSameValue > 2) return false;
+      // else if (unassigned == 0 && assignedWithSameValue == 0) return false;
+      // else if (unassigned == 0 && assignedWithSameValue == 1 && !Preassigned) return false;
+      // if unassigned is 1, assigned(same) is 1
+    }
+
+    return true;
+  }
+  public bool isConstraintsMet()
+  {
+    if (Active)
+    {
+      int assignedWithSameValue = 0, unassigned = 0;
+      foreach (var peer in Peers)
+      {
+        if (peer.Value == Value && peer.Active) assignedWithSameValue++;
+        else if (!peer.Active) unassigned++;
       }
 
       if (Preassigned && assignedWithSameValue > 1) return false;

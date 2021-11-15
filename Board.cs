@@ -10,7 +10,24 @@ public class Board
     set { _states = value; }
   }
 
-  private int _width, _height, _colors;
+  private int _width, _height;
+  private Random _rand;
+  
+  private int _colors;
+  public int Colors
+  {
+      get { return _colors; }
+      set { _colors = value; }
+  }
+  
+  private int[] _colorCounter;
+  public int[] ColorCounter
+  {
+      get { return _colorCounter; }
+      set { _colorCounter = value; }
+  }
+  
+  
   public int Width
   {
     get { return _width;}
@@ -33,7 +50,69 @@ public class Board
     _height = height;
     CreateStates(n_domain);
     ConnectStates();
-
+  }
+  public Board(int width, int n_colors)
+  {
+    _nodesCount = 0;
+    _colors = n_colors;
+    _width = width;
+    _height = width;
+    CreateStates();
+    ConnectStates();
+    _rand = new Random();
+    Populate(n_colors);
+    // PrintBoard();
+  }
+  
+  public void Populate(int n_colors)
+  { //as its name, this method is to populate the board with random colors
+    _colorCounter = new int[n_colors];
+    // put 3 for each color
+    // put the heads / preassigned state, randomly of course
+    for (int i = 0; i < n_colors; i++)
+    {
+      int idx;
+      do
+      { // to make sure it's empty
+          idx = _rand.Next(_height*_width);
+      } while (_states[idx].Value != -1);
+      
+      _states[idx].Value = i;
+      _states[idx].Preassigned = true;
+      
+      _colorCounter[i] = 1;
+    }
+    foreach (var state in UnassignedStates())
+    {
+        if(notEnough() != -1)
+        {
+          state.Value = notEnough();
+          _colorCounter[state.Value]++;
+        } 
+        else if(notEnough() == -1)
+        {
+          state.Value = _rand.Next(n_colors);
+          _colorCounter[state.Value]++;
+        }
+    }
+    
+  }
+  
+  int notEnough()
+  {
+    for (int i = 0; i < _colorCounter.Length; i++)
+        if(ColorCounter[i] < 3) return i;
+    return -1;
+  }
+  
+  public int GetEmptyIndex()
+  {
+    int idx;
+    do
+    {
+        idx = _rand.Next(_height*_width);
+    } while (_states[idx].Value != -1);
+    return idx;
   }
 
   public void CreateStates(int n_domain)
@@ -44,6 +123,12 @@ public class Board
       domain.Add(i);
     for (var i = 0; i < _width * _height; i++)
       _states.Add(new State(i, domain));
+  }
+  public void CreateStates()
+  {
+    _states = new List<State>();
+    for (int i = 0; i < _width * _height; i++)
+      _states.Add(new State(i));
   }
 
   public void ConnectStates()
@@ -95,6 +180,11 @@ public class Board
 
     return true;
   }
+  public bool isActivated()
+  {
+    foreach (var state in _states) if(!state.Active) return false;
+    return true;
+  }
 
   public List<State> UnassignedStates()
   {
@@ -114,6 +204,38 @@ public class Board
       if (state.Active) temp.Add(state);
     }
     return temp;
+  }
+  
+  public List<State> GetInactiveStates()
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+      if(!state.Active) temp.Add(state); 
+    return temp;
+  }
+  public List<State> GetInactiveStates(int col)
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+    {
+        if(!state.Active && state.Value != col) temp.Add(state);
+    }
+    return temp;
+  }
+  
+  public List<State> GetPreassignedStates()
+  {
+    List<State> temp = new List<State>();
+    foreach (var state in _states)
+    {
+        if(state.Preassigned && !state.Active) temp.Add(state);
+    }
+    return temp.OrderBy(o => o.Value).ToList();
+  }
+  
+  public List<State> GetActiveStatesByColor()
+  {
+    return GetActiveStates().OrderBy(o => o.Value).ToList();
   }
 
   // this orders the list based on the number of peers (ascending) -- so, MRV?

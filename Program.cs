@@ -37,7 +37,8 @@ namespace cspNetwork
       //   new Data {Index = 3, BoardSize = 5, ColorCount = 2, InitialBoard = "xqx", CompleteBoard = "yyy", ExecutionTime = 123, IsSolvable = true}
       // };
       // WriteData(records);
-      CreateRandomPuzzle(100000, 100);
+      // CreateRandomPuzzle(100000, 100);
+      Board newBoard = new Board(5, 7);
 
     }
 
