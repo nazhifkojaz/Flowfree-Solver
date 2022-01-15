@@ -61,7 +61,7 @@ public class Board
     ConnectStates();
     _rand = new Random();
     Populate(n_colors);
-    // PrintBoard();
+    PrintBoard();
   }
   
   public void Populate(int n_colors)
@@ -78,7 +78,7 @@ public class Board
       } while (_states[idx].Value != -1);
       
       _states[idx].Value = i;
-      _states[idx].Preassigned = true;
+      // _states[idx].Preassigned = true;
       
       _colorCounter[i] = 1;
     }
@@ -213,14 +213,18 @@ public class Board
       if(!state.Active) temp.Add(state); 
     return temp;
   }
-  public List<State> GetInactiveStates(int col)
+  public List<State> GetInactiveStatesByColor(int col, int id)
   {
     List<State> temp = new List<State>();
     foreach (var state in _states)
     {
-        if(!state.Active && state.Value != col) temp.Add(state);
+        if(!state.Active && state.Value == col && state.Id != id) temp.Add(state);
     }
     return temp;
+  }
+  public List<State> GetInactiveStatesOrdered()
+  {
+    return GetInactiveStates().OrderBy(o => o.Value).ToList();
   }
   
   public List<State> GetPreassignedStates()
@@ -231,11 +235,6 @@ public class Board
         if(state.Preassigned && !state.Active) temp.Add(state);
     }
     return temp.OrderBy(o => o.Value).ToList();
-  }
-  
-  public List<State> GetActiveStatesByColor()
-  {
-    return GetActiveStates().OrderBy(o => o.Value).ToList();
   }
 
   // this orders the list based on the number of peers (ascending) -- so, MRV?
