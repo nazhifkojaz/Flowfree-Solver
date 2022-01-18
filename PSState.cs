@@ -37,7 +37,7 @@ public class PSState
     }
     
     
-    public PSState(int id, bool active)
+    public PSState(int id, bool active = true)
     {
         _id = id;
         _active = active;
