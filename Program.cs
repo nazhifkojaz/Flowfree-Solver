@@ -38,18 +38,18 @@ namespace cspNetwork
             // };
             // WriteData(records);
             // CreateRandomPuzzle(100000, 100);
-            for (int i = 0; i < 5; i++)
-            {
-                var watch = new System.Diagnostics.Stopwatch();
-                watch.Start();
-                Board newBoard = new Board(5, 3);
-                BtAlgo solver = new BtAlgo(newBoard);
-                solver.RestructureBoard();
-                watch.Stop();
-                Console.WriteLine();
-                newBoard.PrintBoard();
-                Console.WriteLine(watch.ElapsedMilliseconds);
-            }
+            // for (int i = 0; i < 5; i++)
+            // {
+                // var watch = new System.Diagnostics.Stopwatch();
+                // watch.Start();
+                PSBoard newBoard = new PSBoard(5, 3);
+                // BtAlgo solver = new BtAlgo(newBoard);
+                // solver.RestructureBoard();
+                // watch.Stop();
+                // Console.WriteLine();
+                // newBoard.PrintBoard();
+                // Console.WriteLine(watch.ElapsedMilliseconds);
+            // }
         }
 
         public static void CreateRandomPuzzle(int n, int m)

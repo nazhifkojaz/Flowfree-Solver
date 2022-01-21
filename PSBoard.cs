@@ -22,99 +22,122 @@ public class PSBoard
         get { return _boardSize; }
         set { _boardSize = value; }
     }
-    
+
     private Random _rand;
     private int _pointer;
-    
+
     public PSBoard(int boardSize, int n_colors)
     {
         _colors = n_colors;
         _boardSize = boardSize;
         _rand = new Random();
+
+        CreateStates();
+        ConnectStates();
+        // PrintBoard();
+        // if (Populate()) PrintBoard();
+        // else Console.WriteLine("Populate failed");
     }
-    
+
+    public void PrintBoard()
+    {
+        for (var i = 0; i < _boardSize; i++)
+        {
+            for (var j = 0; j < _boardSize; j++)
+            {
+                Console.Write(_states[i * _boardSize + j].Value + "\t");
+            }
+            Console.WriteLine("");
+        }
+    }
+
     public void CreateStates()
     {
         _states = new List<PSState>();
         for (int i = 0; i < _boardSize * _boardSize; i++)
             _states.Add(new PSState(i));
     }
-    
+
     public void ConnectStates()
     {
         int row = 0, col = 0;
         for (int i = 0; i < _boardSize * _boardSize; i++)
         {
             col = i % _boardSize;
-            row = i % _boardSize;
-            
-            if(col - 1 >= 0) _states[i].Peers.Add(_states[i-1]); //left
-            if(col + 1 < _boardSize) _states[i].Peers.Add(_states[i+1]); //right
-            if(row-1 >= 0) _states[i].Peers.Add(_states[i-_boardSize]); //upper
-            if(row+1 < _boardSize) _states[i].Peers.Add(_states[i+_boardSize]); //bottom
+            row = i / _boardSize;
+
+            if (col - 1 >= 0) _states[i].Peers.Add(_states[i - 1]); //left
+            if (col + 1 < _boardSize) _states[i].Peers.Add(_states[i + 1]); //right
+            if (row - 1 >= 0) _states[i].Peers.Add(_states[i - _boardSize]); //upper
+            if (row + 1 < _boardSize) _states[i].Peers.Add(_states[i + _boardSize]); //bottom
         }
     }
-    
+
     public List<PSState> GetUnassignedStates()
     {
         List<PSState> temp = new List<PSState>();
         foreach (var state in _states)
-            if(state.Value == -1) temp.Add(state);
+            if (state.Value == -1) temp.Add(state);
         return temp;
     }
-    
-    private int _colorCounter;
+
+    public int GetEmptyIndex()
+    {
+        int idx;
+        do
+        {
+            idx = _rand.Next(_boardSize * _boardSize);
+        } while (_states[idx].Value != -1);
+        return idx;
+    }
+
     public bool Populate()
     {
-        if(_pointer == _colors) return true;
-        else
+        int colCount;
+        int failCount = 0;
+        int pointer = 0;
+        while (pointer < _colors)
         {
-            List<PSState> unassignedStates = GetUnassignedStates().OrderBy(a => _rand.Next()).ToList();
-            foreach (var state in unassignedStates)
+            colCount = 0;
+            if (failCount == 50) return false;
+            int idx = GetEmptyIndex();
+            // Console.WriteLine(pointer);
+
+            if (GrowColorBlock(idx, pointer))
             {
-                
-            }
-        }
-        
-        return false;
-    }
-    
-    // public bool PutColorBlock(int color, int id, int counter = 0)
-    // {
-    //     if(counter == 3) return true;
-    //     var randomizedPeers = _states[id].Peers.OrderBy(a => _rand.Next()).ToList();
-    //     foreach (var peer in randomizedPeers)
-    //     {
-    //         if(peer.Value == -1)
-    //         {
-                
-    //         }
-    //     }
-    //     return false;
-    // }
-    
-    public List<int> GrowColor(int color, int id)
-    {
-        List<PSState> copy = _states;
-        List<int> ids = new List<int>();
-        ids.Add(id);
-        int activeId = id;
-        int counter = 1;
-        while (counter < 3)
-        {
-            List<PSState> randomizedPeer = copy[activeId].Peers.OrderBy(a => _rand.Next()).ToList();
-            foreach (var peer in randomizedPeer)
-            {
-                if(copy[peer.Id].Value == -1)
+                foreach (var state in _states)
                 {
-                    counter += 1;
-                    activeId = peer.Id;
-                    ids.Add(peer.Id);
-                    break;
+                    if(state.Value == pointer) colCount++;
                 }
-                return ids;
+                // Console.WriteLine($"{pointer} + {colCount}");
+                Console.WriteLine();
+                PrintBoard();
+                pointer++;
+            } 
+            else failCount++;
+        }
+        Console.WriteLine(pointer);
+        Console.WriteLine(_colors);
+
+        return true;
+    }
+
+    public bool GrowColorBlock(int id, int color, int counter = 0)
+    {
+        if (counter > 2) return true; //continue to populate
+        else //keep growing the color
+        {
+            List<PSState> randomizedPeers = _states[id].Peers.OrderBy(a => _rand.Next()).ToList();
+            foreach (var peer in randomizedPeers)
+            {
+                if (peer.Value == -1)
+                {
+                    peer.Value = color;
+                    if(GrowColorBlock(peer.Id, color, counter++)) return true;
+                }
+                peer.Value = -1;
             }
         }
-        return ids;
+        return false;
     }
 }

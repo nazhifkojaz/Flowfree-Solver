@@ -41,6 +41,7 @@ public class PSState
     {
         _id = id;
         _active = active;
+        _value = -1;
     }
     
     public bool isConstraintsValid()

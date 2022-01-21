@@ -43,19 +43,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\nzhfkjz\\.nuget\\packages\\": {}
+    "C:\\Users\\nazhi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj",
+      "projectUniqueName": "I:\\Projects\\cspNetwork\\cspNetwork.csproj",
       "projectName": "cspNetwork",
-      "projectPath": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj",
-      "packagesPath": "C:\\Users\\nzhfkjz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\obj\\",
+      "projectPath": "I:\\Projects\\cspNetwork\\cspNetwork.csproj",
+      "packagesPath": "C:\\Users\\nazhi\\.nuget\\packages\\",
+      "outputPath": "I:\\Projects\\cspNetwork\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\nzhfkjz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\nazhi\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -99,7 +99,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
