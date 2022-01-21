@@ -63,6 +63,18 @@ public class Board
     Populate(n_colors);
     PrintBoard();
   }
+  public Board(int width, int n_colors, String initial)
+  {
+      _nodesCount = 0;
+      _colors = n_colors;
+      _width = width;
+      _height = width;
+      CreateStates();
+      ConnectStates();
+      _rand = new Random();
+      AssignInitial(initial);
+      PrintBoard();
+  }
   
   public void Populate(int n_colors)
   { //as its name, this method is to populate the board with random colors
@@ -160,6 +172,19 @@ public class Board
         _states[i].Peers.Add(_states[i + _height]); //down
         _states[i].Bot = i+_height;
       } else {_states[i].Bot = -1;}
+    }
+  }
+  
+  public void AssignInitial(String initial)
+  {
+    for (int i = 0; i < initial.Length; i++)
+    {
+      if(initial[i] == 'x') _states[i].Value = -1;
+      else
+      {
+        _states[i].Active = true;
+        _states[i].Value = Convert.ToInt32(Char.GetNumericValue(initial[i]));
+      }
     }
   }
 

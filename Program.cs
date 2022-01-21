@@ -40,16 +40,22 @@ namespace cspNetwork
             // CreateRandomPuzzle(100000, 100);
             // for (int i = 0; i < 5; i++)
             // {
-                // var watch = new System.Diagnostics.Stopwatch();
-                // watch.Start();
-                PSBoard newBoard = new PSBoard(5, 3);
-                // BtAlgo solver = new BtAlgo(newBoard);
-                // solver.RestructureBoard();
-                // watch.Stop();
-                // Console.WriteLine();
-                // newBoard.PrintBoard();
-                // Console.WriteLine(watch.ElapsedMilliseconds);
+            // var watch = new System.Diagnostics.Stopwatch();
+            // watch.Start();
+            // PSBoard newBoard = new PSBoard(5, 3);
+            // BtAlgo solver = new BtAlgo(newBoard);
+            // solver.RestructureBoard();
+            // watch.Stop();
+            // Console.WriteLine();
+            // newBoard.PrintBoard();
+            // Console.WriteLine(watch.ElapsedMilliseconds);
             // }
+            List<Data> puzzleDict = LoadPuzzleData();
+            foreach (var puzzle in puzzleDict)
+            {
+                Board newBoard = new Board(puzzle.BoardSize, puzzle.ColorCount, puzzle.InitialBoard);
+                Console.WriteLine();
+            }
         }
 
         public static void CreateRandomPuzzle(int n, int m)
@@ -218,6 +224,22 @@ namespace cspNetwork
                 csv.NextRecord();
                 csv.WriteRecord(record);
             }
+        }
+
+        public static List<Data> LoadPuzzleData()
+        {
+            List<Data> temp = new List<Data>();
+            using (var reader = new StreamReader("record.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Read();
+                csv.ReadHeader();
+                while (csv.Read())
+                {
+                    temp.Add(csv.GetRecord<Data>());
+                }
+            }
+            return temp;
         }
 
     }

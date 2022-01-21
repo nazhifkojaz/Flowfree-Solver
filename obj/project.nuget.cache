@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Tgj8WKdi7VGIa8jwDOi4PPffdxKB2EBJtB2DRrwQ+vY4x1CT9wSBSwV+Y04MPWzHBWP32H529pwweyBvQDOStQ==",
+  "dgSpecHash": "G1VJFESR4G8+gxpV1KvW2ndYQowPSLNGFmns9XZ8jXP/wlgg6dgp+KD6HdDzj72L2t6Nm56qjf6+UxUYyvcuGw==",
   "success": true,
-  "projectFilePath": "I:\\Projects\\cspNetwork\\cspNetwork.csproj",
+  "projectFilePath": "C:\\Users\\nzhfkjz\\Documents\\cspNetwork\\cspNetwork.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\nazhi\\.nuget\\packages\\csvhelper\\27.1.1\\csvhelper.27.1.1.nupkg.sha512"
+    "C:\\Users\\nzhfkjz\\.nuget\\packages\\csvhelper\\27.1.1\\csvhelper.27.1.1.nupkg.sha512"
   ],
   "logs": []
 }
