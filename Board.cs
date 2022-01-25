@@ -10,6 +10,14 @@ public class Board
     set { _states = value; }
   }
 
+  private List<TreeNode> _nodes;
+  public List<TreeNode> Nodes
+  {
+    get { return _nodes; }
+    set { _nodes = value; }
+  }
+  
+
   private int _width, _height;
   private Random _rand;
   
@@ -39,8 +47,13 @@ public class Board
     set { _nodesCount = value; }
   }
 
-
-
+  private String _completeBoard;
+  public String CompleteBoard
+  {
+    get { return _completeBoard; }
+    set { _completeBoard = value; }
+  }
+  
   public Board(int width, int height, int n_domain)
   {
     // initialize the board
@@ -63,17 +76,18 @@ public class Board
     Populate(n_colors);
     PrintBoard();
   }
-  public Board(int width, int n_colors, String initial)
+  public Board(int width, int n_colors, String initial, String completeBoard)
   {
       _nodesCount = 0;
       _colors = n_colors;
       _width = width;
       _height = width;
+      _completeBoard = completeBoard;
       CreateStates();
       ConnectStates();
       _rand = new Random();
       AssignInitial(initial);
-      PrintBoard();
+      // PrintBoard();
   }
   
   public void Populate(int n_colors)
@@ -139,8 +153,12 @@ public class Board
   public void CreateStates()
   {
     _states = new List<State>();
+    _nodes = new List<TreeNode>();
     for (int i = 0; i < _width * _height; i++)
+    {
       _states.Add(new State(i));
+      // _nodes.Add(new TreeNode(i));
+    }
   }
 
   public void ConnectStates()
@@ -184,6 +202,7 @@ public class Board
       {
         _states[i].Active = true;
         _states[i].Value = Convert.ToInt32(Char.GetNumericValue(initial[i]));
+        _states[i].Preassigned = true;
       }
     }
   }

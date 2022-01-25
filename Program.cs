@@ -53,7 +53,10 @@ namespace cspNetwork
             List<Data> puzzleDict = LoadPuzzleData();
             foreach (var puzzle in puzzleDict)
             {
-                Board newBoard = new Board(puzzle.BoardSize, puzzle.ColorCount, puzzle.InitialBoard);
+                Board newBoard = new Board(puzzle.BoardSize, puzzle.ColorCount, puzzle.InitialBoard, puzzle.CompleteBoard);
+                PNS solver = new PNS(newBoard);
+                // solver.search();
+                newBoard.PrintBoard();
                 Console.WriteLine();
             }
         }

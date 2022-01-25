@@ -5,6 +5,10 @@ using System.Linq;
 public static class Constants
 {
     public const int MaxValue = 10000000;
+    public enum NodeType
+    {
+        unknown, proof, disproof
+    };
 }
 
 public class TreeNode
@@ -34,32 +38,65 @@ public class TreeNode
         get { return _root; }
         set { _root = value; }
     }
-    
 
-    private List<TreeNode> _child;
+    private TreeNode _parent;
+    public TreeNode Parent
+    {
+        get { return _parent; }
+        set { _parent = value; }
+    }
+    
+    private Constants.NodeType _nodeType;
+    public Constants.NodeType NodeType
+    {
+        get { return _nodeType; }
+        set { _nodeType = value; }
+    }
+
+    private List<TreeNode> _child = new List<TreeNode>();
     public List<TreeNode> Child
     {
         get { return _child; }
         set { _child = value; }
     }
+    private bool _isAnd;
+    public bool IsAnd
+    {
+        get { return _isAnd; }
+        set { _isAnd = value; }
+    }
+
+    private int _cVal;
+    public int CVal
+    {
+        get { return _cVal; }
+        set { _cVal = value; }
+    }
+    
+    
+    
 
     public TreeNode(bool isRoot)
     {
         if(isRoot)
         {
+            _isAnd = false;
             _root = true;
             _pn = 0;
             _dn = 0;
             _child.Clear();
+            _nodeType = Constants.NodeType.proof;
         }
     }
 
     public TreeNode(double nPN, double nDN)
     {
+        _isAnd = true;
         _root = false;
         _pn = nPN;
         _dn = nDN;
         _child.Clear();
+        _nodeType = Constants.NodeType.unknown;
     }
 
     public void PrintChild()
@@ -70,5 +107,6 @@ public class TreeNode
             if(ch.Child.Count > 0) ch.PrintChild();
         }
     }
+    
     
 }

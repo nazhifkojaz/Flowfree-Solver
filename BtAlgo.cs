@@ -21,7 +21,7 @@ public class BtAlgo
     public BtAlgo(Board problem)
     {
         _problem = problem;
-        _counter = Enumerable.Repeat(1, problem.ColorCounter.Length).ToArray();
+        // _counter = Enumerable.Repeat(1, problem.ColorCounter.Length).ToArray();
     }
     // public bool search()
     // {
@@ -97,6 +97,7 @@ public class BtAlgo
                     peer.Value = -1;
                     peer.Active = false;
                 }
+                current.Active = true;
             }
         }
         // Console.WriteLine("failed");
