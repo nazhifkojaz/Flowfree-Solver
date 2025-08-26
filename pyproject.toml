@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "flowfree-puzzles"
+version = "0.1.0"
+description = "FlowFree puzzle generator and solver"
+authors = ["nazhifkojaz <nazhifkojaz@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "flowfree"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+numpy = "^2.0"
+matplotlib = "^3.9"
+ipywidgets = "^8.1"
+ipykernel = "^6.29"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3"
+pytest-benchmark = "^4.0"
+ruff = "^0.6"
+mypy = "^1.10"
+pre-commit = "^3.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
