@@ -1,0 +1,24 @@
+# Python cache/compiled
+__pycache__/
+*.py[cod]
+
+# Builds / packaging
+build/
+dist/
+*.egg-info/
+
+# envs
+.venv/
+venv/
+
+# test / lint
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage*
+
+# notebook related
+.ipynb_checkpoints/
+
+# editors
+.vscode/
