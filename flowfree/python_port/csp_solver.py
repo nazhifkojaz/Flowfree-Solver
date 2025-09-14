@@ -1,9 +1,11 @@
 from csp_board import Board
 from csp_fc import FC
 
+import time
+
 
 class BtAlgo:
-    def __init__(self, board: Board):
+    def __init__(self, board: Board, TIME_CAP: float = 120.0):
         self._problem = board
         self._stats = {
             "attempts": 0,
@@ -11,7 +13,15 @@ class BtAlgo:
             "total_branching": 0,
             "max_branching": 0,
             "decision_node": 0,
+            "tree_depth": 0,
+            "time_s": 0,
         }
+
+        self._time_cap = TIME_CAP
+        self._t_start = time.perf_counter()
+
+    def _elapsed(self) -> float:
+        return time.perf_counter() - self._t_start
 
     def _other_active_for(self, color: int, exclude_id: int) -> int | None:
         for s in self._problem._states:
@@ -19,9 +29,12 @@ class BtAlgo:
                 return s._id
         return None
 
-    def search(self) -> bool:
+    def search(self, depth: int = 0) -> bool:
+        if depth > self._stats["tree_depth"]:
+            self._stats["tree_depth"] = depth
         # finished scenario
         if self._problem.IsAssigned():
+            self._stats["time_s"] = self._elapsed()
             return True
 
         actives = self._problem.GetActiveStatesOrdered()
@@ -30,6 +43,10 @@ class BtAlgo:
 
         # iterate through active states
         for current in actives:
+            # stop when time_cap passed
+            if self._elapsed() > self._time_cap:
+                break
+
             current._active = False
 
             # iterate through current's unassigned peers
@@ -66,7 +83,7 @@ class BtAlgo:
                 FC.Maintain_for([current, peer])
 
                 if self._problem.IsValid():
-                    if self.search():
+                    if self.search(depth+1):
                         return True
 
                 # Undo
@@ -79,4 +96,5 @@ class BtAlgo:
             current._active = True
 
         # the branch has no solution
+        self._stats["time_s"] = self._elapsed()
         return False

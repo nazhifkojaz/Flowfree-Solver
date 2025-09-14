@@ -22,6 +22,7 @@ class Solver:
             "backtracks": 0,
             "total_branching": 0,
             "max_branching": 0,
+            "tree_depth": 0,
             "decision_node": 0,
             "single_neighbor": 0,
             "single_domain": 0,
@@ -118,7 +119,9 @@ class Solver:
             elif tag == "sn":
                 SingleNeighbor.undo(payload)
 
-    def search(self) -> bool:
+    def search(self, depth: int = 0) -> bool:
+        if depth > self._stats["tree_depth"]:
+            self._stats["tree_depth"] = depth
         # pre-branching propagation
         preprop = self._apply_force_moves()
         ttkey = self._tt_key()
@@ -219,7 +222,7 @@ class Solver:
 
                 # if the color is completed, prune and deactivate heads
                 pruned, deactivated = self._prune_completed_colors()
-                if self._checks.fast_valid() and self.search():
+                if self._checks.fast_valid() and self.search(depth + 1):
                     return True
 
                 for rec in reversed(pruned):
