@@ -1,4 +1,4 @@
-from csp_state import State
+from .csp_state import State
 
 
 class Board:

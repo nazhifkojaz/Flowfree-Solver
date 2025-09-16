@@ -1,5 +1,5 @@
-from csp_board import Board
-from csp_fc import FC
+from .csp_board import Board
+from .csp_fc import FC
 
 import time
 
@@ -83,7 +83,7 @@ class BtAlgo:
                 FC.Maintain_for([current, peer])
 
                 if self._problem.IsValid():
-                    if self.search(depth+1):
+                    if self.search(depth + 1):
                         return True
 
                 # Undo

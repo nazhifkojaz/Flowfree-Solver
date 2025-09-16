@@ -1,4 +1,4 @@
-from csp_state import State, Record
+from .csp_state import State, Record
 
 
 class FC:
