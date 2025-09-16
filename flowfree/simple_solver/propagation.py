@@ -12,8 +12,9 @@ class Propagation:
     @staticmethod
     def force_single_color_cells(
         b: Board, reach: dict[int, set[int]], stats: dict
-    ) -> bool | str:
-        """If an empty cell is reachable by exactly one color, assign it to that color.
+    ) -> PropOutcome:
+        """
+        If an empty cell is reachable by exactly one color, assign it to that color.
         Fail if any empty has zero candidate colors.
         """
         changed = False
@@ -34,10 +35,11 @@ class Propagation:
         return PropOutcome.CHANGED if changed else PropOutcome.NO_CHANGE
 
     @staticmethod
-    def force_degree_neighbors(b: Board, stats: dict) -> bool | str:
-        """If a colored cell must reach a required degree (1 for endpoints, 2 otherwise)
+    def force_degree_neighbors(b: Board, stats: dict) -> PropOutcome:
+        """
+        If a colored cell must reach a required degree (1 for endpoints, 2 otherwise)
         and the number of permissible empty neighbors equals the remaining requirement,
-        fill them immediately. If local degree constraints are already violated, fail.
+        fill them immediately. If local degree constraints are violated, fail.
         """
         changed = False
         N = b.n
@@ -65,7 +67,7 @@ class Propagation:
             if len(cand) == need:
                 for nb in cand:
                     if not b.degree_ok_local(nb, after_color=val):
-                        return False
+                        return PropOutcome.ERROR
                     b._set(nb, val)
                     stats["force_single_degree"] += 1
                     changed = True
