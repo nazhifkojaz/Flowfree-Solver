@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
-from state import State
-from fc import FC
+from .state import State
+from .fc import FC
 
 
 class Board:

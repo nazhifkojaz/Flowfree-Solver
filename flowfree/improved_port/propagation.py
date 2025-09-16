@@ -1,4 +1,4 @@
-from fc import FC
+from .fc import FC
 from collections import deque
 
 

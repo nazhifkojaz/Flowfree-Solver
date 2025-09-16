@@ -1,9 +1,9 @@
-from board import Board
-from state import Record
-from fc import FC
-from state import State
-from validators import Validators
-from propagation import SingleNeighbor, SingleDomain, CutVertexBridge
+from .board import Board
+from .state import Record
+from .fc import FC
+from .state import State
+from .validators import Validators
+from .propagation import SingleNeighbor, SingleDomain, CutVertexBridge
 from collections import OrderedDict
 
 import time

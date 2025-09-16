@@ -1,5 +1,5 @@
 from collections import deque
-from state import State, Record
+from .state import State, Record
 
 
 class FC:
