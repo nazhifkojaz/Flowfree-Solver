@@ -7,6 +7,7 @@ from .propagation import SingleNeighbor, SingleDomain, CutVertexBridge
 from collections import OrderedDict
 
 import time
+from flowfree.stats import bump, ensure_keys, new_stats
 
 
 class Solver:
@@ -16,19 +17,17 @@ class Solver:
         self._problem = board
         self._node_cap = NODE_CAP
         self._time_cap = TIME_CAP
-        self._stats = {
-            "time_s": 0.0,
-            "attempts": 0,
-            "backtracks": 0,
-            "total_branching": 0,
-            "max_branching": 0,
-            "tree_depth": 0,
-            "decision_node": 0,
-            "single_neighbor": 0,
-            "single_domain": 0,
-            "cutvertex_bridge": 0,
-            "tt_hits": 0,
-        }
+        self._stats = new_stats()
+        ensure_keys(
+            self._stats,
+            (
+                "propagations_single_neighbor",
+                "propagations_single_domain",
+                "propagations_cutvertex_bridge",
+                "tt_hits",
+                "tt_max_entries",
+            ),
+        )
         self._checks = Validators(board)
         self._tt = OrderedDict()
         self._tt_capacity = 3_000_000
@@ -46,12 +45,27 @@ class Solver:
     def _tt_set(self, key, value):
         self._tt[key] = value
         self._tt.move_to_end(key)
+        self._stats["tt_max_entries"] = max(
+            self._stats.get("tt_max_entries", 0), len(self._tt)
+        )
         if len(self._tt) > self._tt_capacity:
             print("not enough TT")
             self._tt.popitem(last=False)
 
     def _elapsed(self) -> float:
         return time.perf_counter() - self._t_start
+
+    def _finalize_stats(self) -> None:
+        forced = (
+            self._stats.get("propagations_single_neighbor", 0)
+            + self._stats.get("propagations_single_domain", 0)
+            + self._stats.get("propagations_cutvertex_bridge", 0)
+        )
+        self._stats["nodes_generated"] = self._stats["attempts"] + forced
+
+    def finalize_stats(self) -> None:
+        self._finalize_stats()
+        self._stats["time_s"] = self._elapsed()
 
     def _prune_completed_colors(self):
         recs: list[Record] = []
@@ -136,13 +150,12 @@ class Solver:
 
         # complete check
         if self._checks.fast_valid() and self._problem.IsAssigned():
-            self._stats["time_s"] = self._elapsed()
             return True
 
         # TT update/check
         hit = self._tt_get(ttkey)
         if hit is False:
-            self._stats["tt_hits"] += 1
+            bump(self._stats, "tt_hits")
             self._undo_frames(preprop)
             return False
 
@@ -158,7 +171,6 @@ class Solver:
             if (self._stats["attempts"] > self._node_cap) or (
                 self._elapsed() > self._time_cap
             ):
-                self._stats["time_s"] = self._elapsed()
                 break
 
             goal_id = self._other_active_for(current._value, current._id)
@@ -191,7 +203,7 @@ class Solver:
             )
 
             if candidates:
-                self._stats["decision_node"] += 1
+                self._stats["decision_nodes"] += 1
                 self._stats["total_branching"] += len(candidates)
                 if len(candidates) > self._stats["max_branching"]:
                     self._stats["max_branching"] = len(candidates)

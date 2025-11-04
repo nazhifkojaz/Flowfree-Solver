@@ -1,5 +1,6 @@
 from .fc import FC
 from collections import deque
+from flowfree.stats import bump_propagation
 
 
 class SingleNeighbor:
@@ -40,7 +41,7 @@ class SingleNeighbor:
                 continue
 
             # update the stats
-            stats["single_neighbor"] = stats.get("single_neighbor", 0) + 1
+            bump_propagation(stats, "single_neighbor")
 
             # assignments
             cur._active = False
@@ -68,7 +69,8 @@ class SingleNeighbor:
 
 class SingleDomain:
     """
-    If an unassigned cell has a single legal value (single domain, c) and exactly one neighbor (head/frontier) with c-value,
+    If an unassigned cell has a single legal value (single domain, c) 
+    and exactly one neighbor (head/frontier) with c-value,
     attach itself to that neighbor, and move the head to this cell instead.
     """
 
@@ -93,7 +95,7 @@ class SingleDomain:
                 if not n._active:
                     continue
 
-                stats["single_domain"] = stats.get("single_domain", 0) + 1
+                bump_propagation(stats, "single_domain")
                 n._active = False
                 s._value = c
 
@@ -191,7 +193,7 @@ class CutVertexBridge:
 
                         FC.Maintain_for([s])
                         # fills.append((s, refresh_frontiers))
-                        stats["cutvertex_bridge"] = stats.get("cutvertex_bridge", 0) + 1
+                        bump_propagation(stats, "cutvertex_bridge")
                         fills.append(s)
 
                         changed = True
