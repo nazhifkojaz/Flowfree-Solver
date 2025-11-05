@@ -58,6 +58,6 @@ for idx, row in enumerate(df.itertuples(index=False), start=1):
             }
         )
 
-# results_df = pd.DataFrame(results)
-# results_df.to_csv(parent_dir / "data/simple_benchmark_result_3mins.csv", index=False)
-# print(results_df.head())
+results_df = pd.DataFrame(results)
+results_df.to_csv(parent_dir / "data/simple_benchmark_result_3mins.csv", index=False)
+print(results_df.head())

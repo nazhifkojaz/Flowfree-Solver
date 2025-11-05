@@ -4,6 +4,7 @@ from .board import Board, EMPTY
 from .propagation import Propagation, PropOutcome
 
 from collections import deque
+from flowfree.stats import ensure_keys, new_stats
 
 
 class Solver:
@@ -14,18 +15,16 @@ class Solver:
         # number of cells (width * height)
         self.N = self.b.n
 
-        self._stats = {
-            "attempts": 0,
-            "backtracks": 0,
-            "force_single_color": 0,
-            "force_single_degree": 0,
-            "decision_node": 0,
-            "total_branching": 0,
-            "max_branching": 0,
-            "average_branching": 0.0,
-            "tree_depth": 0,
-            "time_s": 0,
-        }
+        self._final_board: list[int] | None = None
+
+        self._stats = new_stats({"average_branching": 0.0})
+        ensure_keys(
+            self._stats,
+            (
+                "propagations_single_color",
+                "propagations_single_degree",
+            ),
+        )
 
         self._time_cap = TIME_CAP
         self._time_start = time.perf_counter()
@@ -37,12 +36,18 @@ class Solver:
         return time.perf_counter() - self._time_start
 
     def get_stats(self) -> dict:
-        if self._stats["decision_node"] > 0:
+        if self._stats["decision_nodes"] > 0:
             self._stats["average_branching"] = round(
-                self._stats["total_branching"] / self._stats["decision_node"], 2
+                self._stats["total_branching"] / self._stats["decision_nodes"], 2
             )
         else:
             self._stats["average_branching"] = 0.0
+        # Treat each speculative attempt and forced propagation fill as a generated node.
+        forced = (
+            self._stats.get("propagations_single_color", 0)
+            + self._stats.get("propagations_single_degree", 0)
+        )
+        self._stats["nodes_generated"] = self._stats["attempts"] + forced
         return dict(self._stats)
 
     def _compute_reachability(self):
@@ -126,6 +131,7 @@ class Solver:
         if self.b.is_full():
             if all(self.b.degree_ok_local(i) for i in range(self.N)):
                 solution.append(self.b.to_string())
+                self._final_board = [cell.value for cell in self.b.cells]
                 return True
             return False
 
@@ -142,7 +148,7 @@ class Solver:
         # mark for backtrack
         mark = self.b.push()
 
-        self._stats["decision_node"] += 1  # decision node
+        self._stats["decision_nodes"] += 1  # decision node
         self._stats["total_branching"] += len(best_cands)
         if len(best_cands) > self._stats["max_branching"]:
             self._stats["max_branching"] = len(best_cands)
@@ -167,9 +173,15 @@ class Solver:
 
     def solve(self) -> str | None:
         solution: list[str] = []
+        self._final_board = None
         if not self._apply_force_moves():
             self._stats["time_s"] = self._elapsed()
             return []
         self._dfs(solution)
         self._stats["time_s"] = self._elapsed()
         return solution[0] if solution else None
+
+    def final_board_values(self) -> list[int] | None:
+        if self._final_board is None:
+            return None
+        return list(self._final_board)

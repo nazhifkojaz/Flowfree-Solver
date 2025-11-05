@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from utils import string_to_tokens
+from ..utils import string_to_tokens
 
 EMPTY = -1
 

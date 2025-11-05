@@ -1,4 +1,5 @@
 from enum import IntEnum
+from flowfree.stats import bump_propagation
 from .board import Board, EMPTY
 
 
@@ -30,7 +31,7 @@ class Propagation:
                 if not b.degree_ok_local(i, after_color=col):
                     return PropOutcome.ERROR
                 b._set(i, col)
-                stats["force_single_color"] += 1
+                bump_propagation(stats, "single_color")
                 changed = True
         return PropOutcome.CHANGED if changed else PropOutcome.NO_CHANGE
 
@@ -69,6 +70,6 @@ class Propagation:
                     if not b.degree_ok_local(nb, after_color=val):
                         return PropOutcome.ERROR
                     b._set(nb, val)
-                    stats["force_single_degree"] += 1
+                    bump_propagation(stats, "single_degree")
                     changed = True
         return PropOutcome.CHANGED if changed else PropOutcome.NO_CHANGE
