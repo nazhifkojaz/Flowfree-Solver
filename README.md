@@ -3,6 +3,7 @@
 This repository contains three FlowFree/Numberlink solvers, a benchmark suite and a dataset of flowfree puzzles (see `data/`). Solver included are:
 - **python_port**: basic head-extending with Forward Checking (FC) + DFS.
 - **improved_port**: improved `python_port` with stronger domain maintenance + FC + DFS + propagations + validators + transposition table (TT) + completed color pruning.
+- **pns_solver**: proof-number search (PNS) on head moves with propagation + validators + TT. Similar to `improved_port` but uses PNS instead of DFS.
 - **simple_solver**: reachability + propagation + DFS.
 
 
