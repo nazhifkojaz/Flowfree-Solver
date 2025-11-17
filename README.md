@@ -12,6 +12,7 @@ This repository contains three FlowFree/Numberlink solvers, a benchmark suite an
 |:--------------|--------:|---------:|------------:|---------:|:-------------|
 | python_port   |      90 |        49 |          41 |       0 | 54.4%        |
 | improved_port |      90 |        80 |          10 |       0 | 88.9%        |
+| pns_solver    |      90 |        84 |           6 |       0 | 93.3%        |
 | simple_solver |      90 |        90 |           0 |       0 | 100.0%       |
 
 **Note:** see each solver's .md files and benchmark result data for detailed stats.
