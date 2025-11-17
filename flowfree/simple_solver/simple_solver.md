@@ -1,36 +1,76 @@
-# `simple_solver` (Reachability + forced moves + DFS)
+# `simple_solver`
 
-A take on a simpler approach, using reachability cells set per color, combined with forced moves and DFS. It's not a head-extending search, but more like a global "try c color in this cell" search.
+Cell-centric depth-first search with propagation. Each decision colours
+an empty cell directly rather than extending colour “heads”.
 
-## How it works
+## Approach
 
-- **Compute reachability**: for each color, BFS from one endpoint to the other endpoint, storing reachable empty cells for that color.
-- **Forced moves/propagations**: just like `improved_port`, repeatedly apply forced moves until no more can be applied. Forced moves are:
-    - `SingleColor`: if an empty cell can only be filled by one color, force the move (though quite rare).
-    - `SingleDegree`: when a colored cell has exactly the same amount of empty neighbors as the amount required by its degree limit (1 for endpoints, 2 for connector cells), force the move to the empty neighbors.
-- **DFS when no more forced moves**: pick the empty cells with the smallest domain (MRV, again!), and try each color, then recurse.
----
+- **Search model:** DFS over empty cells using minimum-remaining-values (MRV) to
+  pick the cell with the fewest candidate colours.
+- **Per-colour reachability:** Before branching, BFS from each endpoint pair to
+  determine which empties remain legal for that colour; dead branches are cut
+  immediately.
+- **Propagation rules:**
+  - `force_single_color_cells` fills empties reachable by exactly one colour.
+  - `force_degree_neighbors` enforces local degree caps (endpoint=1, connector=2)
+    and fills neighbours when the remaining capacity matches the number of free
+    cells.
+- **Validity guards:** `Board.empty_regions_port_ok()` ensures every empty region
+  touches at least two coloured ports to avoid dead pockets; `degree_ok_local`
+  prevents over-saturating endpoints.
+- **State management:** Lightweight board stores assignments and push/pop logs for
+  quick backtracking.
 
-## Benchmark summary (time cap: 3 minutes per puzzle)
+## Solving Flow
 
-| size | solved | timed_out | failed | success_rate | mean_attempts | median_attempts | mean_backtracks | median_backtracks | mean_tree_depth | median_tree_depth | single_color_mean | single_color_median | single_degree_mean | single_degree_median |
-|------|-------:|----------:|-------:|-------------:|--------------:|-----------------:|----------------:|------------------:|----------------:|------------------:|------------------:|--------------------:|-------------------:|----------------------:|
-| 5x5  | 15 | 0 | 0 | 100% | 2.733 |	0.0 |	0.467 |	0.0 |	1.000 |	0.0 |	0.400 |	0.0 |	19.467 |	17.0 |
-| 6x6  | 15 | 0 | 0 | 100% | 12.400 |	4.0 |	2.467 |	0.0 |	2.333 |	1.0 |	0.000 |	0.0 |	48.067 |	26.0 |
-| 7x7  | 15 | 0 | 0 | 100% |  8.200 |	5.0 |	1.067 |	0.0 |	2.200 |	1.0 |	0.067 |	0.0 |	49.467 |	42.0 |
-| 8x8  | 15 | 0 | 0 | 100% | 987.667 |	7.0 |	195.600 |	0.0 | 	5.400 |	3.0 |	0.067 |	0.0 |	1848.467 |	52.0 |
-| 9x9  | 15 | 0 | 0 | 100% | 586.933 |	21.0 |	95.133 |	1.0 |	6.333 |	8.0 |	0.200 |	0.0 |	4587.467 |	197.0 |
-| 10x10| 15 | 0 | 0 | 100% | 68958.933 |	182.0 |	9675.067 |	29.0 |	10.133 |	9.0 |	184.067 |	0.0 |	150114.267 |	641.0 |
-  
+1. Run reachability for every colour and apply the two propagation rules until no
+   more forced moves exist.
+2. Choose the next empty cell via MRV.
+3. Branch over candidate colours, skipping any that violate local degree checks.
+4. After each speculative paint, propagate again; if a contradiction arises,
+   backtrack and try the next colour.
+5. When the grid is full, verify local degree constraints to confirm a solution.
 
+## Pros
+
+- Solves all 90 benchmark puzzles within the 180 s limit.
+- Extremely fast on most boards (≈4 ms median) because many puzzles finish during
+  propagation alone.
+- Straightforward code path makes new heuristics easy to integrate.
+
+## Cons
+
+- No transposition table, so identical dead states will be re-explored (but it's an easy fix if needed)
+- Reachability is recomputed from scratch at each node; this dominates runtime on
+  large, sparse boards.
+- Runtime has a heavy tail on 10×10 “open” or “mixed” puzzles (longest run
+  155 s).
+
+## Benchmark Snapshot *(90 puzzles)*
+
+- **Solve rate:** 100 % (90/90).
+- **Median time:** 0.0041 s; **mean:** 5.19 s; **max:** 155.17 s.
+- **Median search effort:** 7 attempts, 0 backtracks, 3 decision nodes, 62 nodes generated.
+- **Propagation hits (median):** single-colour 0; single-degree 57.
+- **Tag medians:** bottleneck 0.0034 s; many_colors 0.0021 s; tunnel 0.0039 s; open
+  0.0083 s (mean 21.9 s due to long tail); mixed 0.0092 s.
+
+### Detailed Benchmark Table (time cap 180 s)
+
+| size | solved | timed_out | failed | success_rate | mean_time_s | mean_attempts | mean_backtracks | median_attempts | median_backtracks | mean_tree_depth | median_tree_depth | mean_single_color | mean_single_degree |
+|------|-------:|----------:|-------:|-------------:|------------:|--------------:|----------------:|-----------------:|------------------:|----------------:|------------------:|------------------:|-------------------:|
+| 5×5  | 15 | 0 | 0 | 100 % | 0.00078 | 2.73 | 0.47 | 0 | 0 | 1.00 | 0.0 | 0.40 | 19.47 |
+| 6×6  | 15 | 0 | 0 | 100 % | 0.00263 | 12.40 | 2.47 | 4 | 0 | 2.33 | 1.0 | 0.00 | 48.07 |
+| 7×7  | 15 | 0 | 0 | 100 % | 0.00404 | 8.20 | 1.07 | 5 | 0 | 2.20 | 1.0 | 0.07 | 49.47 |
+| 8×8  | 15 | 0 | 0 | 100 % | 0.17382 | 987.67 | 195.60 | 7 | 0 | 5.40 | 3.0 | 0.07 | 1848.47 |
+| 9×9  | 15 | 0 | 0 | 100 % | 0.28077 | 586.93 | 95.13 | 21 | 1 | 6.33 | 8.0 | 0.20 | 4587.47 |
+| 10×10| 15 | 0 | 0 | 100 % | 30.67340 | 68 958.93 | 9675.07 | 182 | 29 | 10.13 | 9.0 | 184.07 | 150 114.27 |
 
 **Overall:** 90/90 solved (100.0%).
 
----
-
 ## Notes
-- Surprisingly good, all puzzles are solved within the 180s time cap, even the 10x10 puzzles, beating both `python_port` and over-engineered `improved_port`.
-- I think the reachability cells set per color is very effective though a bit costly to compute.
-- The forced moves/propagations are also very effective (as seen in `improved_port`), especially the `SingleDegree`.
-- Though it's not shown in the benchmark summary, the number of average/max branching is higher than `improved_port`, since it's "trying c colors in this cell" instead of "extending head to neighbor cells", so the search tree is wider (but shallower).
-- Still quite struggling with some open puzzles, though not as bad as `improved_port`.
+
+- Reachability sets per colour, although recomputed frequently, provide powerful
+  pruning.
+- Although average branching factors are higher than head-based solvers (since move candidates are based on coloring cells), the depth is lower, leading to manageable search trees.
+- Propagation rules pretty much carry the process on many puzzles, minimizing search effort.
